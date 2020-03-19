@@ -1,6 +1,7 @@
 node_modules
 .expo
 npm-debug.*
+yarn-error.log
 *.jks
 *.p8
 *.p12
@@ -10,6 +11,8 @@ npm-debug.*
 web-build/
 web-report/
 ormconfig.json
+packages/mobile/src/graphql/types.ts
+__generated__
 
 # macOS
 .DS_Store
