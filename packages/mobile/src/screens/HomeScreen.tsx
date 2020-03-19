@@ -1,35 +1,68 @@
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { FAB, TextInput } from "react-native-paper";
-import { ItemCard } from "../components/ItemCard";
+import { KeyboardAvoidingView, ScrollView, StyleSheet } from "react-native";
+import { ActivityIndicator, FAB, Portal, TextInput } from "react-native-paper";
+import { TodoCard } from "../components/TodoCard";
+import {
+  TodosDocument,
+  TodosQuery,
+  useAddTodoMutation,
+  useTodosQuery
+} from "../graphql/types";
 import { useKeyboard } from "../hooks/useKeyboard";
 
 export const HomeScreen = () => {
   const [add, setAdd] = useState(false);
+  const [value, setValue] = useState("");
+
+  const { loading, error, data } = useTodosQuery();
+  const [createTodo] = useAddTodoMutation({
+    update: (cache, { data }) => {
+      const { todos } = cache.readQuery<TodosQuery>({
+        query: TodosDocument
+      });
+
+      cache.writeQuery<TodosQuery>({
+        query: TodosDocument,
+        data: { todos: todos.concat([data.addTodo]) }
+      });
+    }
+  });
 
   useKeyboard(
     () => {},
     () => setAdd(false)
   );
 
+  if (loading) return <ActivityIndicator />;
+
   return (
-    <View style={styles.container}>
-      <ItemCard title="Help me" />
-      <ItemCard title="I love coding!" />
-      {add && (
-        <TextInput
-          autoFocus
-          placeholder="Add a task"
-          onSubmitEditing={() => {}}
+    <ScrollView contentContainerStyle={styles.container}>
+      {data.todos.map(todo => (
+        <TodoCard key={todo.id} {...todo} />
+      ))}
+      <Portal>
+        {add && (
+          <KeyboardAvoidingView style={styles.input} behavior="position">
+            <TextInput
+              value={value}
+              autoFocus
+              placeholder="Add a task"
+              onChangeText={setValue}
+              onSubmitEditing={() => {
+                createTodo({ variables: { input: { title: value } } });
+                setValue("");
+              }}
+            />
+          </KeyboardAvoidingView>
+        )}
+        <FAB
+          visible
+          style={styles.fab}
+          onPress={() => setAdd(true)}
+          icon="plus"
         />
-      )}
-      <FAB
-        visible
-        style={styles.fab}
-        onPress={() => setAdd(true)}
-        icon="plus"
-      />
-    </View>
+      </Portal>
+    </ScrollView>
   );
 };
 
@@ -43,5 +76,9 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1
+  },
+  input: {
+    position: "absolute",
+    bottom: 0
   }
 });

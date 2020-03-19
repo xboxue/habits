@@ -5,7 +5,7 @@ interface Props {
   title: string;
 }
 
-export const ItemCard = (props: Props) => {
+export const TodoCard = (props: Props) => {
   const [completed, setCompleted] = useState(false);
 
   return (
