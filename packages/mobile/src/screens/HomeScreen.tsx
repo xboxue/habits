@@ -10,9 +10,20 @@ export const HomeScreen = observer(() => {
 
   return (
     <View style={styles.container}>
-      <Appbar.Header>
-        <Appbar.Content title="Home" />
-        {todoStore.isSelecting && (
+      {!todoStore.isSelecting ? (
+        <Appbar.Header>
+          <Appbar.Content title="Home" />
+        </Appbar.Header>
+      ) : (
+        <Appbar.Header>
+          <Appbar.Action
+            style={styles.closeIcon}
+            icon="close"
+            onPress={() => {
+              todoStore.isSelecting = false;
+              todoStore.toggleAllSelected(false);
+            }}
+          />
           <Appbar.Action
             icon="delete"
             onPress={() => {
@@ -20,16 +31,14 @@ export const HomeScreen = observer(() => {
               todoStore.isSelecting = false;
             }}
           />
-        )}
-      </Appbar.Header>
+        </Appbar.Header>
+      )}
       <TodoList />
       <Portal>
         <FAB
           visible
           style={styles.fab}
-          onPress={() => {
-            todoStore.isAdding = true;
-          }}
+          onPress={() => (todoStore.isAdding = true)}
           icon="plus"
         />
       </Portal>
@@ -47,5 +56,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1
+  },
+  closeIcon: {
+    marginRight: "auto"
   }
 });

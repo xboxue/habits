@@ -1,4 +1,4 @@
-import { action, autorun, observable, toJS } from "mobx";
+import { action, autorun, computed, observable, toJS } from "mobx";
 import { AsyncStorage } from "react-native";
 import { Todo } from "../models/Todo";
 import { RootStore } from "./RootStore";
@@ -19,6 +19,10 @@ export class TodoStore {
       } catch (error) {
         console.log(error);
       }
+    });
+
+    autorun(() => {
+      if (!this.selectedCount) this.isSelecting = false;
     });
   }
 
@@ -45,5 +49,17 @@ export class TodoStore {
   @action
   deleteSelected() {
     this.todos = this.todos.filter(todo => !todo.selected);
+  }
+
+  @action
+  toggleAllSelected(selected: boolean) {
+    this.todos.forEach(todo => (todo.selected = selected));
+  }
+
+  @computed get selectedCount() {
+    return this.todos.reduce(
+      (count, todo) => (todo.selected ? count + 1 : count),
+      0
+    );
   }
 }
