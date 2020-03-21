@@ -6,8 +6,9 @@ export class Todo {
   @observable selected = false;
   id = Math.random();
 
-  constructor(title: string) {
+  constructor(title: string, completed: boolean) {
     this.title = title;
+    this.completed = completed;
   }
 
   toggleCompleted() {

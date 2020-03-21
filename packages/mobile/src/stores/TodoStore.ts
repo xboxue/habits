@@ -1,4 +1,5 @@
-import { action, observable } from "mobx";
+import { action, autorun, observable, toJS } from "mobx";
+import { AsyncStorage } from "react-native";
 import { Todo } from "../models/Todo";
 import { RootStore } from "./RootStore";
 
@@ -10,13 +11,30 @@ export class TodoStore {
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
+    this.loadTodos();
 
-    for (let i = 0; i < 5; i++) this.todos.push(new Todo("abc"));
+    autorun(async () => {
+      try {
+        await AsyncStorage.setItem("todos", JSON.stringify(toJS(this.todos)));
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  }
+
+  async loadTodos() {
+    try {
+      const todos: Todo[] = JSON.parse(await AsyncStorage.getItem("todos"));
+      if (todos)
+        todos.forEach(todo => this.addTodo(todo.title, todo.completed));
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   @action
-  addTodo(title: string) {
-    this.todos.push(new Todo(title));
+  addTodo(title: string, completed = false) {
+    this.todos.push(new Todo(title, completed));
   }
 
   @action
