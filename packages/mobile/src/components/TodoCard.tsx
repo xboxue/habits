@@ -1,25 +1,48 @@
-import React, { useState } from "react";
+import { observer } from "mobx-react";
+import React, { useContext } from "react";
 import { Card, IconButton } from "react-native-paper";
+import { Todo } from "../models/Todo";
+import { RootStoreContext } from "../stores/RootStore";
 
 interface Props {
-  title: string;
+  todo: Todo;
 }
 
-export const TodoCard = (props: Props) => {
-  const [completed, setCompleted] = useState(false);
+export const TodoCard = observer(({ todo }: Props) => {
+  const { todoStore } = useContext(RootStoreContext);
+  const icon = todoStore.isSelecting
+    ? todo.selected
+      ? "circle"
+      : "circle-outline"
+    : todo.completed
+    ? "check-circle"
+    : "circle-outline";
 
   return (
-    <Card onPress={() => console.log("a")}>
+    <Card
+      onPress={() => {
+        if (todoStore.isSelecting) todo.toggleSelected();
+      }}
+      onLongPress={() => {
+        if (todoStore.isSelecting) return;
+        todoStore.isSelecting = true;
+        todo.toggleSelected();
+      }}
+    >
       <Card.Title
-        title={props.title}
+        title={todo.title}
         left={() => (
           <IconButton
-            icon={completed ? "check-circle" : "circle-outline"}
-            onPress={() => setCompleted(!completed)}
+            icon={icon}
+            onPress={() =>
+              todoStore.isSelecting
+                ? todo.toggleSelected()
+                : todo.toggleCompleted()
+            }
           />
         )}
-        titleStyle={completed && { textDecorationLine: "line-through" }}
+        titleStyle={todo.completed && { textDecorationLine: "line-through" }}
       />
     </Card>
   );
-};
+});

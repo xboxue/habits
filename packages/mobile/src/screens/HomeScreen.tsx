@@ -1,70 +1,41 @@
-import React, { useState } from "react";
-import { KeyboardAvoidingView, ScrollView, StyleSheet } from "react-native";
-import { ActivityIndicator, FAB, Portal, TextInput } from "react-native-paper";
-import { TodoCard } from "../components/TodoCard";
-import {
-  TodosDocument,
-  TodosQuery,
-  useAddTodoMutation,
-  useTodosQuery
-} from "../graphql/types";
-import { useKeyboard } from "../hooks/useKeyboard";
+import { observer } from "mobx-react";
+import React, { useContext } from "react";
+import { StyleSheet, View } from "react-native";
+import { Appbar, FAB, Portal } from "react-native-paper";
+import { TodoList } from "../components/TodoList";
+import { RootStoreContext } from "../stores/RootStore";
 
-export const HomeScreen = () => {
-  const [add, setAdd] = useState(false);
-  const [value, setValue] = useState("");
-
-  const { loading, error, data } = useTodosQuery();
-  const [createTodo] = useAddTodoMutation({
-    update: (cache, { data }) => {
-      const { todos } = cache.readQuery<TodosQuery>({
-        query: TodosDocument
-      });
-
-      cache.writeQuery<TodosQuery>({
-        query: TodosDocument,
-        data: { todos: todos.concat([data.addTodo]) }
-      });
-    }
-  });
-
-  useKeyboard(
-    () => {},
-    () => setAdd(false)
-  );
-
-  if (loading) return <ActivityIndicator />;
+export const HomeScreen = observer(() => {
+  const { todoStore } = useContext(RootStoreContext);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {data.todos.map(todo => (
-        <TodoCard key={todo.id} {...todo} />
-      ))}
-      <Portal>
-        {add && (
-          <KeyboardAvoidingView style={styles.input} behavior="position">
-            <TextInput
-              value={value}
-              autoFocus
-              placeholder="Add a task"
-              onChangeText={setValue}
-              onSubmitEditing={() => {
-                createTodo({ variables: { input: { title: value } } });
-                setValue("");
-              }}
-            />
-          </KeyboardAvoidingView>
+    <View style={styles.container}>
+      <Appbar.Header>
+        <Appbar.Content title="Home" />
+        {todoStore.isSelecting && (
+          <Appbar.Action
+            icon="delete"
+            onPress={() => {
+              todoStore.deleteSelected();
+              todoStore.isSelecting = false;
+            }}
+          />
         )}
+      </Appbar.Header>
+      <TodoList />
+      <Portal>
         <FAB
           visible
           style={styles.fab}
-          onPress={() => setAdd(true)}
+          onPress={() => {
+            todoStore.isAdding = true;
+          }}
           icon="plus"
         />
       </Portal>
-    </ScrollView>
+    </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   fab: {
@@ -76,9 +47,5 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1
-  },
-  input: {
-    position: "absolute",
-    bottom: 0
   }
 });
