@@ -23,7 +23,9 @@ export const TodoCard = observer(({ todo }: Props) => {
     <Card
       style={styles.card}
       onPress={() => {
-        if (todoStore.isSelecting) todo.toggleSelected();
+        if (todoStore.isSelecting) return todo.toggleSelected();
+        todoStore.isEditing = true;
+        todoStore.focusedTodo = todo;
       }}
       onLongPress={() => {
         if (todoStore.isSelecting) return;

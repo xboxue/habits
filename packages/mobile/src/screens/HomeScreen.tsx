@@ -4,6 +4,7 @@ import { StyleSheet, View } from "react-native";
 import { Appbar, FAB, Portal } from "react-native-paper";
 import { TodoList } from "../components/TodoList";
 import { TodoSelectBar } from "../components/TodoSelectBar";
+import { TodoSheet } from "../components/TodoSheet";
 import { RootStoreContext } from "../stores/RootStore";
 
 export const HomeScreen = observer(() => {
@@ -19,6 +20,7 @@ export const HomeScreen = observer(() => {
         </Appbar.Header>
       )}
       <TodoList />
+      <TodoSheet />
       <Portal>
         <FAB
           visible

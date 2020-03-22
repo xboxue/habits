@@ -7,6 +7,8 @@ export class TodoStore {
   @observable todos: Todo[] = [];
   @observable isAdding = false;
   @observable isSelecting = false;
+  @observable isEditing = false;
+  @observable focusedTodo: Todo = null;
   rootStore: RootStore;
 
   constructor(rootStore: RootStore) {
