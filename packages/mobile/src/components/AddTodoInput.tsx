@@ -3,13 +3,11 @@ import { TextInput } from "react-native-paper";
 import { useKeyboard } from "../hooks/useKeyboard";
 import { RootStoreContext } from "../stores/RootStore";
 
-export const TodoInput = () => {
+export const AddTodoInput = () => {
   const { todoStore } = useContext(RootStoreContext);
   const [value, setValue] = useState("");
 
-  useKeyboard(undefined, () => {
-    todoStore.isAdding = false;
-  });
+  useKeyboard(undefined, () => (todoStore.isAdding = false));
 
   return (
     <TextInput

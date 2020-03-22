@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import { KeyboardAvoidingView, ScrollView } from "react-native";
 import { TodoCard } from "../components/TodoCard";
 import { RootStoreContext } from "../stores/RootStore";
-import { TodoInput } from "./TodoInput";
+import { AddTodoInput } from "./AddTodoInput";
 
 export const TodoList = observer(() => {
   const { todoStore } = useContext(RootStoreContext);
@@ -18,7 +18,7 @@ export const TodoList = observer(() => {
           <TodoCard key={todo.id} todo={todo} />
         ))}
       </ScrollView>
-      {todoStore.isAdding && <TodoInput />}
+      {todoStore.isAdding && <AddTodoInput />}
     </KeyboardAvoidingView>
   );
 });
