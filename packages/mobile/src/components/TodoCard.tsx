@@ -7,9 +7,10 @@ import { RootStoreContext } from "../stores/RootStore";
 
 interface Props {
   todo: Todo;
+  drag: () => void;
 }
 
-export const TodoCard = observer(({ todo }: Props) => {
+export const TodoCard = observer(({ todo, drag }: Props) => {
   const { todoStore } = useContext(RootStoreContext);
   const icon = todoStore.isSelecting
     ? todo.selected
@@ -28,9 +29,10 @@ export const TodoCard = observer(({ todo }: Props) => {
         todoStore.focusedTodo = todo;
       }}
       onLongPress={() => {
-        if (todoStore.isSelecting) return;
-        todoStore.isSelecting = true;
-        todo.toggleSelected();
+        drag();
+        // if (todoStore.isSelecting) return;
+        // todoStore.isSelecting = true;
+        // todo.toggleSelected();
       }}
     >
       <Card.Title

@@ -1,10 +1,10 @@
-import { action, autorun, computed, observable, toJS } from "mobx";
+import { action, autorun, computed, observable } from "mobx";
 import { AsyncStorage } from "react-native";
 import { Todo } from "../models/Todo";
 import { RootStore } from "./RootStore";
 
 export class TodoStore {
-  @observable todos: Todo[] = [];
+  readonly todos = observable<Todo>([]);
   @observable isAdding = false;
   @observable isSelecting = false;
   @observable isEditing = false;
@@ -17,7 +17,7 @@ export class TodoStore {
 
     autorun(async () => {
       try {
-        await AsyncStorage.setItem("todos", JSON.stringify(toJS(this.todos)));
+        await AsyncStorage.setItem("todos", JSON.stringify(this.todos.slice()));
       } catch (error) {
         console.log(error);
       }
@@ -50,7 +50,7 @@ export class TodoStore {
 
   @action
   deleteSelected() {
-    this.todos = this.todos.filter(todo => !todo.selected);
+    this.todos.replace(this.todos.filter(todo => !todo.selected));
   }
 
   @action

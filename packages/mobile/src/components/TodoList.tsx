@@ -1,7 +1,9 @@
 import { observer } from "mobx-react";
 import React, { useContext } from "react";
-import { KeyboardAvoidingView, ScrollView } from "react-native";
+import { KeyboardAvoidingView } from "react-native";
+import DraggableFlatlist from "react-native-draggable-flatlist";
 import { TodoCard } from "../components/TodoCard";
+import { Todo } from "../models/Todo";
 import { RootStoreContext } from "../stores/RootStore";
 import { AddTodoInput } from "./AddTodoInput";
 
@@ -13,11 +15,14 @@ export const TodoList = observer(() => {
       behavior="height"
       style={{ flex: 1, justifyContent: "space-between" }}
     >
-      <ScrollView keyboardShouldPersistTaps="always">
-        {todoStore.todos.map(todo => (
-          <TodoCard key={todo.id} todo={todo} />
-        ))}
-      </ScrollView>
+      <DraggableFlatlist<Todo>
+        data={todoStore.todos.slice()}
+        renderItem={({ item, drag, isActive }) => (
+          <TodoCard todo={item} drag={drag} />
+        )}
+        keyExtractor={item => item.id.toString()}
+        onDragEnd={({ data }) => todoStore.todos.replace(data)}
+      />
       {todoStore.isAdding && <AddTodoInput />}
     </KeyboardAvoidingView>
   );

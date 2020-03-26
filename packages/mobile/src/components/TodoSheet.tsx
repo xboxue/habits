@@ -32,6 +32,13 @@ export const TodoSheet = observer(() => {
               }
             />
             <EditTodoInput />
+            <IconButton
+              onPress={() => {
+                todoStore.isEditing = false;
+                todoStore.deleteTodo(todoStore.focusedTodo);
+              }}
+              icon="delete"
+            />
           </Card.Content>
         </Card>
         <List.Item
