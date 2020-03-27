@@ -1,6 +1,8 @@
+import { format, isToday, isTomorrow, isYesterday } from "date-fns";
 import { observer } from "mobx-react";
 import React, { useContext } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
+import { CalendarProvider, WeekCalendar } from "react-native-calendars";
 import { Appbar, FAB, Portal } from "react-native-paper";
 import { TodoList } from "../components/TodoList";
 import { TodoSelectBar } from "../components/TodoSelectBar";
@@ -11,14 +13,32 @@ export const HomeScreen = observer(() => {
   const { todoStore } = useContext(RootStoreContext);
 
   return (
-    <View style={styles.container}>
+    <CalendarProvider
+      style={styles.container}
+      date={todoStore.date}
+      onDateChanged={date => (todoStore.date = date)}
+      showTodayButton
+      todayBottomMargin={40}
+      todayButtonStyle={styles.todayButton}
+    >
       {todoStore.isSelecting ? (
         <TodoSelectBar />
       ) : (
         <Appbar.Header>
-          <Appbar.Content title="Home" />
+          <Appbar.Content
+            title={
+              isToday(todoStore.parsedDate)
+                ? "Today"
+                : isTomorrow(todoStore.parsedDate)
+                ? "Tomorrow"
+                : isYesterday(todoStore.parsedDate)
+                ? "Yesterday"
+                : format(todoStore.parsedDate, "MMMM d")
+            }
+          />
         </Appbar.Header>
       )}
+      <WeekCalendar firstDay={1} />
       <TodoList />
       <TodoSheet />
       <Portal>
@@ -29,7 +49,7 @@ export const HomeScreen = observer(() => {
           icon="plus"
         />
       </Portal>
-    </View>
+    </CalendarProvider>
   );
 });
 
@@ -43,5 +63,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1
+  },
+  todayButton: {
+    alignSelf: "center"
   }
 });

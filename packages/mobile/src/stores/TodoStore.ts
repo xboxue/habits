@@ -1,4 +1,5 @@
-import { action, autorun, computed, observable } from "mobx";
+import { format, parseISO } from "date-fns";
+import { action, autorun, computed, observable, reaction } from "mobx";
 import { AsyncStorage } from "react-native";
 import { Todo } from "../models/Todo";
 import { RootStore } from "./RootStore";
@@ -8,35 +9,50 @@ export class TodoStore {
   @observable isAdding = false;
   @observable isSelecting = false;
   @observable isEditing = false;
+  @observable isLoading = false;
   @observable focusedTodo: Todo = null;
+  @observable date = format(new Date(), "yyyy-MM-dd");
   rootStore: RootStore;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
-    this.loadTodos();
-
-    autorun(async () => {
-      try {
-        await AsyncStorage.setItem("todos", JSON.stringify(this.todos.slice()));
-      } catch (error) {
-        console.log(error);
-      }
-    });
 
     autorun(() => {
       if (!this.selectedCount) this.isSelecting = false;
     });
   }
 
-  async loadTodos() {
-    try {
-      const todos: Todo[] = JSON.parse(await AsyncStorage.getItem("todos"));
-      if (todos)
-        todos.forEach(todo => this.addTodo(todo.title, todo.completed));
-    } catch (error) {
-      console.log(error);
+  storeTodos = reaction(
+    () => this.todos.map(todo => [todo.title, todo.completed]),
+    async () => {
+      try {
+        if (this.isLoading) return;
+        await AsyncStorage.setItem(
+          this.date,
+          JSON.stringify(this.todos.slice())
+        );
+      } catch (error) {
+        console.log(error);
+      }
     }
-  }
+  );
+
+  loadTodos = reaction(
+    () => this.date,
+    async () => {
+      try {
+        this.isLoading = true;
+        const todos: Todo[] = JSON.parse(await AsyncStorage.getItem(this.date));
+        this.todos.replace(
+          todos ? todos.map(todo => new Todo(todo.title, todo.completed)) : []
+        );
+        this.isLoading = false;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    { fireImmediately: true }
+  );
 
   @action
   addTodo(title: string, completed = false) {
@@ -63,5 +79,9 @@ export class TodoStore {
       (count, todo) => (todo.selected ? count + 1 : count),
       0
     );
+  }
+
+  @computed get parsedDate() {
+    return parseISO(this.date);
   }
 }
