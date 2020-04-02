@@ -10,6 +10,7 @@ export class TodoStore {
   @observable isSelecting = false;
   @observable isEditing = false;
   @observable isLoading = false;
+  @observable isEditingRepeat = false;
   @observable focusedTodo: Todo = null;
   @observable date = format(new Date(), "yyyy-MM-dd");
   rootStore: RootStore;

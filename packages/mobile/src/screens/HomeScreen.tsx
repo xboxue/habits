@@ -4,6 +4,7 @@ import React, { useContext } from "react";
 import { StyleSheet } from "react-native";
 import { CalendarProvider, WeekCalendar } from "react-native-calendars";
 import { Appbar, FAB, Portal } from "react-native-paper";
+import { RepeatModal } from "../components/RepeatModal";
 import { TodoList } from "../components/TodoList";
 import { TodoSelectBar } from "../components/TodoSelectBar";
 import { TodoSheet } from "../components/TodoSheet";
@@ -40,6 +41,7 @@ export const HomeScreen = observer(() => {
       )}
       <WeekCalendar firstDay={1} />
       <TodoList />
+      <RepeatModal />
       <TodoSheet />
       <Portal>
         <FAB

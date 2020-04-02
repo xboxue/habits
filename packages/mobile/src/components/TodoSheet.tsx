@@ -2,9 +2,10 @@ import { observer } from "mobx-react";
 import React, { useContext } from "react";
 import { StyleSheet, View } from "react-native";
 import Modal from "react-native-modal";
-import { Card, IconButton, List } from "react-native-paper";
+import { Card, IconButton } from "react-native-paper";
 import { RootStoreContext } from "../stores/RootStore";
 import { EditTodoInput } from "./EditTodoInput";
+import { TodoSheetList } from "./TodoSheetList";
 
 export const TodoSheet = observer(() => {
   const { todoStore } = useContext(RootStoreContext);
@@ -41,11 +42,7 @@ export const TodoSheet = observer(() => {
             />
           </Card.Content>
         </Card>
-        <List.Item
-          title="Set reminder"
-          left={() => <List.Icon icon="bell" />}
-        />
-        <List.Item title="Repeat" left={() => <List.Icon icon="repeat" />} />
+        <TodoSheetList />
       </View>
     </Modal>
   );
