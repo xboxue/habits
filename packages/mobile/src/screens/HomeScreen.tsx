@@ -18,7 +18,7 @@ export const HomeScreen = observer(() => {
       style={styles.container}
       date={todoStore.date}
       onDateChanged={date => (todoStore.date = date)}
-      showTodayButton
+      showTodayButton={!todoStore.isAdding}
       todayBottomMargin={40}
       todayButtonStyle={styles.todayButton}
     >
@@ -45,7 +45,7 @@ export const HomeScreen = observer(() => {
       <TodoSheet />
       <Portal>
         <FAB
-          visible
+          visible={!todoStore.isAdding}
           style={styles.fab}
           onPress={() => (todoStore.isAdding = true)}
           icon="plus"
