@@ -1,20 +1,26 @@
 import { computed, observable } from "mobx";
+import { Todo as TodoEntity } from "../entities/Todo";
 import { days } from "../utils/days";
 
 export class Todo {
   @observable title = "";
   @observable completed = false;
   @observable selected = false;
-  id = Math.random();
   @observable repeatDays = {};
+  id: number;
 
-  constructor(title: string, completed: boolean) {
+  constructor(id: number, title: string, completed: boolean) {
+    this.id = id;
     this.title = title;
     this.completed = completed;
   }
 
-  toggleCompleted() {
+  async toggleCompleted() {
     this.completed = !this.completed;
+
+    const todo = await TodoEntity.findOne(this.id);
+    todo.completed = this.completed;
+    todo.save();
   }
 
   toggleSelected() {
