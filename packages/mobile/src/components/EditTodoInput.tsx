@@ -4,8 +4,8 @@ import { StyleSheet, TextInput } from "react-native";
 import { RootStoreContext } from "../stores/RootStore";
 
 export const EditTodoInput = observer(() => {
-  const { todoStore } = useContext(RootStoreContext);
-  const [value, setValue] = useState(todoStore.focusedTodo?.title);
+  const { viewStore } = useContext(RootStoreContext);
+  const [value, setValue] = useState(viewStore.focusedTodo?.title);
   const [isFocused, setIsFocused] = useState(false);
 
   return (
@@ -14,10 +14,10 @@ export const EditTodoInput = observer(() => {
       onChangeText={setValue}
       onFocus={() => setIsFocused(true)}
       onBlur={() => setIsFocused(false)}
-      onSubmitEditing={() => (todoStore.focusedTodo.title = value)}
+      onSubmitEditing={() => (viewStore.focusedTodo.title = value)}
       style={[
         styles.input,
-        todoStore.focusedTodo.completed &&
+        viewStore.focusedTodo.completed &&
           !isFocused && {
             textDecorationLine: "line-through"
           }

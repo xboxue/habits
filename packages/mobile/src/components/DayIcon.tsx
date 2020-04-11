@@ -9,17 +9,17 @@ interface Props {
 }
 
 export const DayIcon = observer(({ day }: Props) => {
-  const { todoStore } = useContext(RootStoreContext);
+  const { viewStore } = useContext(RootStoreContext);
 
   return (
     <TouchableOpacity
       onPress={() =>
-        (todoStore.focusedTodo.repeatDays[day] = !todoStore.focusedTodo
+        (viewStore.focusedTodo.repeatDays[day] = !viewStore.focusedTodo
           .repeatDays[day])
       }
       style={[
         styles.circle,
-        todoStore.focusedTodo.repeatDays[day] && styles.selected
+        viewStore.focusedTodo.repeatDays[day] && styles.selected
       ]}
     >
       <Text>{days[day][0]}</Text>

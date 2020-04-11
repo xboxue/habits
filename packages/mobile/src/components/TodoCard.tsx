@@ -11,40 +11,23 @@ interface Props {
 }
 
 export const TodoCard = observer(({ todo, drag }: Props) => {
-  const { todoStore } = useContext(RootStoreContext);
-  const icon = todoStore.isSelecting
-    ? todo.selected
-      ? "radiobox-marked"
-      : "circle-outline"
-    : todo.completed
-    ? "check-circle"
-    : "circle-outline";
+  const { viewStore } = useContext(RootStoreContext);
 
   return (
     <Card
       style={styles.card}
       onPress={() => {
-        if (todoStore.isSelecting) return todo.toggleSelected();
-        todoStore.isEditing = true;
-        todoStore.focusedTodo = todo;
+        viewStore.setEditModal(true);
+        viewStore.setFocusedTodo(todo);
       }}
-      onLongPress={() => {
-        drag();
-        // if (todoStore.isSelecting) return;
-        // todoStore.isSelecting = true;
-        // todo.toggleSelected();
-      }}
+      onLongPress={drag}
     >
       <Card.Title
         title={todo.title}
         left={() => (
           <IconButton
-            icon={icon}
-            onPress={() =>
-              todoStore.isSelecting
-                ? todo.toggleSelected()
-                : todo.toggleCompleted()
-            }
+            icon={todo.completed ? "check-circle" : "circle-outline"}
+            onPress={() => todo.toggleCompleted()}
           />
         )}
         titleStyle={todo.completed && { textDecorationLine: "line-through" }}

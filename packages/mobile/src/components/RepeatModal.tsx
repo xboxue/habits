@@ -8,11 +8,11 @@ import { days } from "../utils/days";
 import { DayIcon } from "./DayIcon";
 
 export const RepeatModal = observer(() => {
-  const { todoStore } = useContext(RootStoreContext);
+  const { viewStore } = useContext(RootStoreContext);
 
   return (
     <Modal
-      isVisible={todoStore.isEditingRepeat}
+      isVisible={viewStore.showRepeatModal}
       style={styles.modal}
       backdropTransitionOutTiming={0}
     >
@@ -28,15 +28,13 @@ export const RepeatModal = observer(() => {
         <Dialog.Actions>
           <Button
             onPress={() => {
-              todoStore.focusedTodo.repeatDays = {};
-              todoStore.isEditingRepeat = false;
+              viewStore.focusedTodo.repeatDays = {};
+              viewStore.setRepeatModal(false);
             }}
           >
             Cancel
           </Button>
-          <Button onPress={() => (todoStore.isEditingRepeat = false)}>
-            Done
-          </Button>
+          <Button onPress={() => viewStore.setRepeatModal(false)}>Done</Button>
         </Dialog.Actions>
       </Dialog>
     </Modal>

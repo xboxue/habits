@@ -6,48 +6,43 @@ import { CalendarProvider, WeekCalendar } from "react-native-calendars";
 import { Appbar, FAB, Portal } from "react-native-paper";
 import { RepeatModal } from "../components/RepeatModal";
 import { TodoList } from "../components/TodoList";
-import { TodoSelectBar } from "../components/TodoSelectBar";
 import { TodoSheet } from "../components/TodoSheet";
 import { RootStoreContext } from "../stores/RootStore";
 
 export const HomeScreen = observer(() => {
-  const { todoStore } = useContext(RootStoreContext);
+  const { todoStore, viewStore } = useContext(RootStoreContext);
 
   return (
     <CalendarProvider
       style={styles.container}
       date={todoStore.date}
-      onDateChanged={date => (todoStore.date = date)}
-      showTodayButton={!todoStore.isAdding}
+      onDateChanged={date => todoStore.setDate(date)}
+      showTodayButton={!viewStore.showAddModal}
       todayBottomMargin={40}
       todayButtonStyle={styles.todayButton}
     >
-      {todoStore.isSelecting ? (
-        <TodoSelectBar />
-      ) : (
-        <Appbar.Header>
-          <Appbar.Content
-            title={
-              isToday(todoStore.parsedDate)
-                ? "Today"
-                : isTomorrow(todoStore.parsedDate)
-                ? "Tomorrow"
-                : isYesterday(todoStore.parsedDate)
-                ? "Yesterday"
-                : format(todoStore.parsedDate, "MMMM d")
-            }
-          />
-        </Appbar.Header>
-      )}
+      <Appbar.Header>
+        <Appbar.Content
+          title={
+            isToday(todoStore.parsedDate)
+              ? "Today"
+              : isTomorrow(todoStore.parsedDate)
+              ? "Tomorrow"
+              : isYesterday(todoStore.parsedDate)
+              ? "Yesterday"
+              : format(todoStore.parsedDate, "MMMM d")
+          }
+        />
+      </Appbar.Header>
       <WeekCalendar firstDay={1} />
       <TodoList />
       <RepeatModal />
       <TodoSheet />
       <Portal>
         <FAB
-          visible={!todoStore.isAdding}
+          visible={!viewStore.showAddModal}
           style={styles.fab}
-          onPress={() => (todoStore.isAdding = true)}
+          onPress={() => viewStore.setAddModal(true)}
           icon="plus"
         />
       </Portal>

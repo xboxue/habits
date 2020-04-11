@@ -5,10 +5,10 @@ import { useKeyboard } from "../hooks/useKeyboard";
 import { RootStoreContext } from "../stores/RootStore";
 
 export const AddTodoInput = () => {
-  const { todoStore } = useContext(RootStoreContext);
+  const { todoStore, viewStore } = useContext(RootStoreContext);
   const [value, setValue] = useState("");
 
-  useKeyboard(undefined, () => (todoStore.isAdding = false));
+  useKeyboard(undefined, () => viewStore.setAddModal(false));
 
   const addTodo = () => {
     if (!value) return;

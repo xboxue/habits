@@ -4,32 +4,32 @@ import { IconButton, List } from "react-native-paper";
 import { RootStoreContext } from "../stores/RootStore";
 
 export const TodoSheetList = observer(() => {
-  const { todoStore } = useContext(RootStoreContext);
+  const { viewStore } = useContext(RootStoreContext);
 
   return (
     <>
       <List.Item title="Set reminder" left={() => <List.Icon icon="bell" />} />
       <List.Item
         title={
-          todoStore.focusedTodo?.isRepeating
-            ? todoStore.focusedTodo?.repeatDaysText.join(", ")
+          viewStore.focusedTodo?.isRepeating
+            ? viewStore.focusedTodo?.repeatDaysText.join(", ")
             : "Repeat"
         }
         left={() => (
           <List.Icon
             icon="repeat"
-            color={todoStore.focusedTodo?.isRepeating && "#00BBF2"}
+            color={viewStore.focusedTodo?.isRepeating && "#00BBF2"}
           />
         )}
         right={() =>
-          todoStore.focusedTodo?.isRepeating && (
+          viewStore.focusedTodo?.isRepeating && (
             <IconButton
               icon="close"
-              onPress={() => (todoStore.focusedTodo.repeatDays = {})}
+              onPress={() => (viewStore.focusedTodo.repeatDays = {})}
             />
           )
         }
-        onPress={() => (todoStore.isEditingRepeat = true)}
+        onPress={() => viewStore.setRepeatModal(true)}
       />
     </>
   );

@@ -2,13 +2,13 @@ import { observer } from "mobx-react";
 import React, { useContext, useRef } from "react";
 import { KeyboardAvoidingView } from "react-native";
 import DraggableFlatlist from "react-native-draggable-flatlist";
-import { TodoCard } from "../components/TodoCard";
 import { Todo } from "../models/Todo";
 import { RootStoreContext } from "../stores/RootStore";
 import { AddTodoInput } from "./AddTodoInput";
+import { TodoCard } from "./TodoCard";
 
 export const TodoList = observer(() => {
-  const { todoStore } = useContext(RootStoreContext);
+  const { todoStore, viewStore } = useContext(RootStoreContext);
   const listRef = useRef(null);
 
   return (
@@ -18,7 +18,7 @@ export const TodoList = observer(() => {
     >
       <DraggableFlatlist<Todo>
         onContentSizeChange={() => {
-          if (todoStore.isAdding)
+          if (viewStore.showAddModal)
             listRef.current.current.getNode().scrollToEnd();
         }}
         onRef={ref => {
@@ -29,9 +29,8 @@ export const TodoList = observer(() => {
           <TodoCard todo={item} drag={drag} />
         )}
         keyExtractor={item => item.id.toString()}
-        onDragEnd={({ data }) => todoStore.todos.replace(data)}
       />
-      {todoStore.isAdding && <AddTodoInput />}
+      {viewStore.showAddModal && <AddTodoInput />}
     </KeyboardAvoidingView>
   );
 });

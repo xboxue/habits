@@ -8,16 +8,16 @@ import { EditTodoInput } from "./EditTodoInput";
 import { TodoSheetList } from "./TodoSheetList";
 
 export const TodoSheet = observer(() => {
-  const { todoStore } = useContext(RootStoreContext);
+  const { todoStore, viewStore } = useContext(RootStoreContext);
 
   return (
     <Modal
-      isVisible={todoStore.isEditing}
+      isVisible={viewStore.showEditModal}
       swipeDirection="down"
       backdropTransitionOutTiming={0}
-      onBackdropPress={() => (todoStore.isEditing = false)}
-      onSwipeComplete={() => (todoStore.isEditing = false)}
-      onModalHide={() => (todoStore.focusedTodo = null)}
+      onBackdropPress={() => viewStore.setEditModal(false)}
+      onSwipeComplete={() => viewStore.setEditModal(false)}
+      onModalHide={() => viewStore.setFocusedTodo(null)}
       style={styles.modal}
     >
       <View style={styles.container}>
@@ -25,9 +25,9 @@ export const TodoSheet = observer(() => {
         <Card>
           <Card.Content style={styles.card}>
             <IconButton
-              onPress={() => todoStore.focusedTodo.toggleCompleted()}
+              onPress={() => viewStore.focusedTodo.toggleCompleted()}
               icon={
-                todoStore.focusedTodo?.completed
+                viewStore.focusedTodo?.completed
                   ? "check-circle"
                   : "circle-outline"
               }
@@ -35,8 +35,8 @@ export const TodoSheet = observer(() => {
             <EditTodoInput />
             <IconButton
               onPress={() => {
-                todoStore.isEditing = false;
-                todoStore.deleteTodo(todoStore.focusedTodo);
+                viewStore.setEditModal(false);
+                todoStore.deleteTodo(viewStore.focusedTodo);
               }}
               icon="delete"
             />
