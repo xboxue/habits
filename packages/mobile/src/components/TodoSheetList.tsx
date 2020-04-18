@@ -1,10 +1,11 @@
 import { observer } from "mobx-react";
 import React, { useContext } from "react";
-import { IconButton, List } from "react-native-paper";
+import { IconButton, List, useTheme } from "react-native-paper";
 import { RootStoreContext } from "../stores/RootStore";
 
 export const TodoSheetList = observer(() => {
   const { viewStore } = useContext(RootStoreContext);
+  const { colors } = useTheme();
 
   return (
     <>
@@ -18,7 +19,7 @@ export const TodoSheetList = observer(() => {
         left={() => (
           <List.Icon
             icon="repeat"
-            color={viewStore.focusedTodo?.isRepeating && "#00BBF2"}
+            color={viewStore.focusedTodo?.isRepeating && colors.primary}
           />
         )}
         right={() =>

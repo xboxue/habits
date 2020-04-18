@@ -1,12 +1,13 @@
 import React, { useContext, useState } from "react";
 import { StyleSheet, TextInput } from "react-native";
-import { Button, Card, IconButton } from "react-native-paper";
+import { Button, Card, IconButton, useTheme } from "react-native-paper";
 import { useKeyboard } from "../hooks/useKeyboard";
 import { RootStoreContext } from "../stores/RootStore";
 
 export const AddTodoInput = () => {
   const { todoStore, viewStore } = useContext(RootStoreContext);
   const [value, setValue] = useState("");
+  const { colors } = useTheme();
 
   useKeyboard(undefined, () => viewStore.setAddModal(false));
 
@@ -30,10 +31,10 @@ export const AddTodoInput = () => {
         />
       </Card.Content>
       <Card.Actions>
-        <IconButton color="blue" icon="calendar-check" />
-        <IconButton color="blue" icon="repeat" />
+        <IconButton icon="calendar-check" color={colors.primary} />
+        <IconButton icon="repeat" color={colors.primary} />
         <Button
-          color="blue"
+          color={colors.primary}
           disabled={!value}
           onPress={addTodo}
           style={styles.saveButton}

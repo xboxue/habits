@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import React, { useContext, useRef } from "react";
-import { KeyboardAvoidingView } from "react-native";
+import { KeyboardAvoidingView, StyleSheet } from "react-native";
 import DraggableFlatlist from "react-native-draggable-flatlist";
 import { Todo } from "../models/Todo";
 import { RootStoreContext } from "../stores/RootStore";
@@ -12,11 +12,9 @@ export const TodoList = observer(() => {
   const listRef = useRef(null);
 
   return (
-    <KeyboardAvoidingView
-      behavior="height"
-      style={{ flex: 1, justifyContent: "space-between" }}
-    >
+    <KeyboardAvoidingView behavior="height" style={styles.container}>
       <DraggableFlatlist<Todo>
+        contentContainerStyle={styles.listContainer}
         onContentSizeChange={() => {
           if (viewStore.showAddModal)
             listRef.current.current.getNode().scrollToEnd();
@@ -33,4 +31,15 @@ export const TodoList = observer(() => {
       {viewStore.showAddModal && <AddTodoInput />}
     </KeyboardAvoidingView>
   );
+});
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "space-between"
+  },
+  listContainer: {
+    paddingTop: 4,
+    paddingBottom: 4
+  }
 });

@@ -1,6 +1,7 @@
 import { observer } from "mobx-react";
 import React, { useContext } from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { useTheme } from "react-native-paper";
 import { RootStoreContext } from "../stores/RootStore";
 import { days } from "../utils/days";
 
@@ -10,6 +11,7 @@ interface Props {
 
 export const DayIcon = observer(({ day }: Props) => {
   const { viewStore } = useContext(RootStoreContext);
+  const { colors } = useTheme();
 
   return (
     <TouchableOpacity
@@ -19,10 +21,16 @@ export const DayIcon = observer(({ day }: Props) => {
       }
       style={[
         styles.circle,
-        viewStore.focusedTodo.repeatDays[day] && styles.selected
+        {
+          backgroundColor: viewStore.focusedTodo.repeatDays[day]
+            ? colors.primary
+            : colors.background
+        }
       ]}
     >
-      <Text>{days[day][0]}</Text>
+      <Text style={viewStore.focusedTodo.repeatDays[day] && { color: "white" }}>
+        {days[day][0]}
+      </Text>
     </TouchableOpacity>
   );
 });
@@ -33,8 +41,6 @@ const styles = StyleSheet.create({
     width: 40,
     borderRadius: 50,
     justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#f1f1f1"
-  },
-  selected: { backgroundColor: "#00BBF2" }
+    alignItems: "center"
+  }
 });
