@@ -2,10 +2,11 @@ import { observer } from "mobx-react";
 import React, { useContext, useRef } from "react";
 import { KeyboardAvoidingView, StyleSheet } from "react-native";
 import DraggableFlatlist from "react-native-draggable-flatlist";
+import { Divider } from "react-native-paper";
 import { Todo } from "../models/Todo";
 import { RootStoreContext } from "../stores/RootStore";
 import { AddTodoInput } from "./AddTodoInput";
-import { TodoCard } from "./TodoCard";
+import { TodoListItem } from "./TodoListItem";
 
 export const TodoList = observer(() => {
   const { todoStore, viewStore } = useContext(RootStoreContext);
@@ -24,9 +25,10 @@ export const TodoList = observer(() => {
         }}
         data={todoStore.todos.slice()}
         renderItem={({ item, drag, isActive }) => (
-          <TodoCard todo={item} drag={drag} />
+          <TodoListItem todo={item} drag={drag} />
         )}
         keyExtractor={item => item.id.toString()}
+        ItemSeparatorComponent={Divider}
       />
       {viewStore.showAddModal && <AddTodoInput />}
     </KeyboardAvoidingView>
