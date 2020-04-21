@@ -6,7 +6,7 @@ import "mobx-react-lite/batchingForReactNative";
 import React, { useContext, useState } from "react";
 import { Provider as PaperProvider } from "react-native-paper";
 import { createConnection } from "typeorm/browser";
-import { BottomTabNavigator } from "./src/components/BottomTabNavigator";
+import { RootStackNavigator } from "./src/components/RootStackNavigator";
 import { Todo as TodoEntity } from "./src/entities/Todo";
 import { RootStoreContext } from "./src/stores/RootStore";
 import { theme } from "./src/styles/theme";
@@ -42,8 +42,8 @@ export default function App() {
   return (
     <ApolloProvider client={client}>
       <PaperProvider theme={theme}>
-        <NavigationContainer>
-          <BottomTabNavigator />
+        <NavigationContainer theme={theme}>
+          <RootStackNavigator />
         </NavigationContainer>
       </PaperProvider>
     </ApolloProvider>

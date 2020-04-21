@@ -45,7 +45,23 @@ export class TodoStore {
     this.date = date;
   }
 
+  @action
+  toggleAllSelected(selected: boolean) {
+    this.todos.forEach(todo => (todo.selected = selected));
+  }
+
   @computed get parsedDate() {
     return parseISO(this.date);
+  }
+
+  @computed get selectedTodos() {
+    return this.todos.filter(todo => todo.selected);
+  }
+
+  @computed get selectedCount() {
+    return this.todos.reduce(
+      (count, todo) => (todo.selected ? count + 1 : count),
+      0
+    );
   }
 }

@@ -1,3 +1,4 @@
+import { useIsFocused } from "@react-navigation/native";
 import { observer } from "mobx-react";
 import React, { useContext } from "react";
 import { StyleSheet } from "react-native";
@@ -10,8 +11,9 @@ import { TodoSheet } from "../components/TodoSheet";
 import { RootStoreContext } from "../stores/RootStore";
 
 export const HomeScreen = observer(() => {
-  const { todoStore, viewStore } = useContext(RootStoreContext);
+  const { viewStore } = useContext(RootStoreContext);
   const { colors } = useTheme();
+  const isFocused = useIsFocused();
 
   return (
     <>
@@ -22,7 +24,7 @@ export const HomeScreen = observer(() => {
       <TodoSheet />
       <Portal>
         <FAB
-          visible={!viewStore.showAddModal}
+          visible={!viewStore.showAddModal && isFocused}
           style={[styles.fab, { backgroundColor: colors.text }]}
           onPress={() => viewStore.setAddModal(true)}
           icon="plus"
