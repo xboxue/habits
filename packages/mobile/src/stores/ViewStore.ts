@@ -1,3 +1,4 @@
+import { User } from "firebase";
 import { action, observable } from "mobx";
 import { Todo } from "../models/Todo";
 import { RootStore } from "./RootStore";
@@ -7,6 +8,7 @@ export class ViewStore {
   @observable showEditModal = false;
   @observable showRepeatModal = false;
   @observable focusedTodo: Todo = null;
+  @observable user: User = null;
   rootStore: RootStore;
 
   constructor(rootStore: RootStore) {
@@ -27,5 +29,9 @@ export class ViewStore {
 
   @action setFocusedTodo(todo: Todo) {
     this.focusedTodo = todo;
+  }
+
+  @action setUser(user: User) {
+    this.user = user;
   }
 }

@@ -5,29 +5,23 @@ import { AppLoading } from "expo";
 import "mobx-react-lite/batchingForReactNative";
 import React, { useContext, useState } from "react";
 import { Provider as PaperProvider } from "react-native-paper";
-import { createConnection } from "typeorm/browser";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { RootStackNavigator } from "./src/components/RootStackNavigator";
-import { Todo as TodoEntity } from "./src/entities/Todo";
 import { RootStoreContext } from "./src/stores/RootStore";
 import { theme } from "./src/styles/theme";
+import { connect } from "./src/utils/connect";
+import { getUser } from "./src/utils/getUser";
 
 const client = new ApolloClient({ uri: "http://10.0.2.2:4000/graphql" });
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
-  const { todoStore } = useContext(RootStoreContext);
+  const { todoStore, viewStore } = useContext(RootStoreContext);
 
   const load = async () => {
-    await createConnection({
-      type: "expo",
-      driver: require("expo-sqlite"),
-      database: "test",
-      synchronize: true,
-      logging: true,
-      entities: [TodoEntity]
-    });
-
-    todoStore.loadTodos();
+    const [user] = await Promise.all([getUser, connect()]);
+    viewStore.setUser(user);
+    await todoStore.loadTodos();
   };
 
   if (!isReady)
@@ -41,11 +35,13 @@ export default function App() {
 
   return (
     <ApolloProvider client={client}>
-      <PaperProvider theme={theme}>
-        <NavigationContainer theme={theme}>
-          <RootStackNavigator />
-        </NavigationContainer>
-      </PaperProvider>
+      <SafeAreaProvider>
+        <PaperProvider theme={theme}>
+          <NavigationContainer theme={theme}>
+            <RootStackNavigator />
+          </NavigationContainer>
+        </PaperProvider>
+      </SafeAreaProvider>
     </ApolloProvider>
   );
 }
