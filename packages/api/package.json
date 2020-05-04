@@ -20,5 +20,12 @@
     "@types/graphql": "^14.5.0",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.8.3"
-  }
+  },
+  "workspaces": {
+    "nohoist": [
+      "typeorm",
+      "typeorm/**"
+    ]
+  },
+  "private": true
 }

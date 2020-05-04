@@ -9,8 +9,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { RootStackNavigator } from "./src/components/RootStackNavigator";
 import { RootStoreContext } from "./src/stores/RootStore";
 import { theme } from "./src/styles/theme";
+import { getUser } from "./src/utils/auth";
 import { connect } from "./src/utils/connect";
-import { getUser } from "./src/utils/getUser";
 
 const client = new ApolloClient({ uri: "http://10.0.2.2:4000/graphql" });
 
