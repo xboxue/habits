@@ -13,6 +13,8 @@ web-report/
 ormconfig.json
 packages/mobile/src/graphql/types.ts
 __generated__
+.env
+serviceAccountKey.json
 
 # macOS
 .DS_Store

@@ -1,11 +1,18 @@
 import { ApolloServer } from "apollo-server-express";
 import express from "express";
+import * as admin from "firebase-admin";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { Container } from "typedi";
-import { createConnection, useContainer } from "typeorm";
+import { createConnection, getRepository, useContainer } from "typeorm";
+import { User } from "./entities/User";
 
 const main = async () => {
+  admin.initializeApp({
+    credential: admin.credential.applicationDefault(),
+    databaseURL: "https://tortoise-88352.firebaseio.com"
+  });
+
   useContainer(Container);
   await createConnection();
 
@@ -14,7 +21,22 @@ const main = async () => {
     container: Container
   });
 
-  const server = new ApolloServer({ schema });
+  const server = new ApolloServer({
+    schema,
+    context: async ({ req }) => {
+      try {
+        const token = req.headers.authorization;
+        const { uid } = await admin.auth().verifyIdToken(token);
+
+        const userRepository = getRepository(User);
+        const user = userRepository.findOne(uid);
+
+        return { user };
+      } catch (error) {
+        return { user: null };
+      }
+    }
+  });
 
   const app = express();
   server.applyMiddleware({ app });
