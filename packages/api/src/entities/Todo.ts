@@ -4,9 +4,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from "typeorm";
+import { User } from "./User";
 
 @ObjectType()
 @Entity()
@@ -22,6 +24,10 @@ export class Todo extends BaseEntity {
   @Field()
   @Column()
   completed: boolean;
+
+  @Field(type => User)
+  @ManyToOne(type => User, user => user.posts)
+  author: User;
 
   @Field()
   @CreateDateColumn()

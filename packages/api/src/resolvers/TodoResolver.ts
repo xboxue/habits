@@ -1,9 +1,9 @@
-import "reflect-metadata";
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Repository } from "typeorm";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Todo } from "../entities/Todo";
-import { AddTodoInput } from "./types/AddTodoInput";
+import { Context } from "../types/Context";
+import { CreateTodoInput } from "./types/CreateTodoInput";
 
 @Resolver()
 export class TodoResolver {
@@ -15,8 +15,11 @@ export class TodoResolver {
   }
 
   @Mutation(returns => Todo)
-  addTodo(@Arg("input") input: AddTodoInput): Promise<Todo> {
-    const todo = this.todoRepository.create({ ...input, completed: false });
+  createTodo(
+    @Arg("input") input: CreateTodoInput,
+    @Ctx() ctx: Context
+  ): Promise<Todo> {
+    const todo = this.todoRepository.create({ ...input, author: ctx.user });
     return this.todoRepository.save(todo);
   }
 

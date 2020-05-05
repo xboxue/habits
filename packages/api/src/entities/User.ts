@@ -9,6 +9,7 @@ import {
   PrimaryColumn
 } from "typeorm";
 import { Post } from "./Post";
+import { Todo } from "./Todo";
 
 @ObjectType()
 @Entity()
@@ -40,6 +41,10 @@ export class User extends BaseEntity {
   @Field(type => [Post])
   @OneToMany(type => Post, post => post.author)
   posts: Post[];
+
+  @Field(type => [Todo])
+  @OneToMany(type => Todo, todo => todo.author)
+  todos: Todo[];
 
   @Field(type => [User])
   @ManyToMany(type => User, user => user.following)

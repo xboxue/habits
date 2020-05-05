@@ -1,4 +1,4 @@
-import { ApolloServer } from "apollo-server-express";
+import { ApolloServer, AuthenticationError } from "apollo-server-express";
 import express from "express";
 import * as admin from "firebase-admin";
 import "reflect-metadata";
@@ -33,7 +33,7 @@ const main = async () => {
 
         return { user };
       } catch (error) {
-        return { user: null };
+        throw new AuthenticationError("Invalid user");
       }
     }
   });
