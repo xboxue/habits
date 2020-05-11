@@ -25,11 +25,11 @@ const main = async () => {
     schema,
     context: async ({ req }) => {
       try {
-        const token = req.headers.authorization;
+        const token = req.headers.authorization.split(" ")[1];
         const { uid } = await admin.auth().verifyIdToken(token);
 
         const userRepository = getRepository(User);
-        const user = userRepository.findOne(uid);
+        const user = await userRepository.findOne(uid);
 
         return { user };
       } catch (error) {

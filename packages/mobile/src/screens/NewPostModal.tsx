@@ -1,23 +1,52 @@
 import { observer } from "mobx-react";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { KeyboardAvoidingView, StyleSheet, TextInput } from "react-native";
 import DraggableFlatlist from "react-native-draggable-flatlist";
 import { Appbar, Button, Divider } from "react-native-paper";
 import { TodoPostItem } from "../components/TodoPostItem";
+import { useCreatePostMutation } from "../graphql/types";
 import { Todo } from "../models/Todo";
 import { RootStoreContext } from "../stores/RootStore";
 
 export const NewPostModal = observer(({ navigation }) => {
   const { todoStore } = useContext(RootStoreContext);
+  const [createPost] = useCreatePostMutation();
+  const [value, setValue] = useState("");
 
   return (
     <>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="New Post" />
-        <Appbar.Action icon="check" onPress={() => navigation.goBack()} />
+        <Appbar.Action
+          icon="check"
+          onPress={() => {
+            createPost({
+              variables: {
+                input: {
+                  content: value,
+                  todos: todoStore.selectedTodos.map(
+                    ({ title, completed }) => ({
+                      title,
+                      completed
+                    })
+                  )
+                }
+              }
+            });
+            navigation.goBack();
+          }}
+        />
       </Appbar.Header>
       <KeyboardAvoidingView behavior="height" style={styles.container}>
+        <TextInput
+          // autoFocus
+          value={value}
+          onChangeText={setValue}
+          multiline
+          style={styles.input}
+          placeholder="What's going on?"
+        />
         <DraggableFlatlist<Todo>
           data={todoStore.selectedTodos.slice()}
           renderItem={({ item, drag }) => (
@@ -25,14 +54,6 @@ export const NewPostModal = observer(({ navigation }) => {
           )}
           ItemSeparatorComponent={Divider}
           keyExtractor={item => item.id.toString()}
-          ListHeaderComponent={() => (
-            <TextInput
-              // autoFocus
-              multiline
-              style={styles.input}
-              placeholder="What's going on?"
-            />
-          )}
         />
         <Button onPress={() => navigation.navigate("SelectTodoModal")}>
           Add Todos
