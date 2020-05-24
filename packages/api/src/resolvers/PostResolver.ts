@@ -1,4 +1,4 @@
-import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Repository } from "typeorm";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Post } from "../entities/Post";
@@ -10,6 +10,13 @@ import { CreatePostInput } from "./types/CreatePostInput";
 export class PostResolver {
   @InjectRepository(Post) private postRepository: Repository<Post>;
   @InjectRepository(PostTodo) private todoRepository: Repository<PostTodo>;
+
+  @Query(returns => [Post])
+  feed(): Promise<Post[]> {
+    return this.postRepository.find({
+      relations: ["author", "todos"]
+    });
+  }
 
   @Mutation(returns => Post)
   async createPost(

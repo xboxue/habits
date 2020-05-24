@@ -1,8 +1,8 @@
 import { gql } from "apollo-boost";
 
-export const createUserMutation = gql`
-  mutation CreatePost($input: CreatePostInput!) {
-    createPost(input: $input) {
+export const feedQuery = gql`
+  query Feed {
+    feed {
       id
       content
       author {

@@ -10,32 +10,37 @@ import {
   Paragraph,
   useTheme
 } from "react-native-paper";
-import { TodoListItem } from "../components/TodoListItem";
+import { FeedQuery } from "../graphql/types";
 import { RootStoreContext } from "../stores/RootStore";
+import { FeedPostTodoItem } from "./FeedPostTodoItem";
 
-export const PostCard = observer(() => {
+interface Props {
+  post: FeedQuery["feed"][0];
+}
+
+export const PostCard = observer(({ post }: Props) => {
   const { todoStore } = useContext(RootStoreContext);
   const { colors } = useTheme();
 
   return (
     <Card style={{ elevation: 0, marginBottom: 10 }}>
       <Card.Title
-        title="Bowen Xue"
+        title={post.author.displayName}
         left={props => <Avatar.Text {...props} label="BX" />}
       />
       <Card.Content>
-        <Paragraph>
-          I did nothing today lol. Here's my plan for tomorrow
-        </Paragraph>
+        <Paragraph>{post.content}</Paragraph>
         <FlatList
-          data={todoStore.todos.slice(0, 3)}
-          renderItem={({ item }) => (
-            <TodoListItem todo={item} drag={() => {}} />
-          )}
+          data={post.todos.slice(0, 3)}
+          renderItem={({ item }) => <FeedPostTodoItem todo={item} />}
           ListFooterComponent={() => (
             <>
-              <Divider />
-              <List.Subheader>+12 more</List.Subheader>
+              {post.todos.length > 3 && (
+                <>
+                  <Divider />
+                  <List.Subheader>+{post.todos.length - 3} more</List.Subheader>
+                </>
+              )}
             </>
           )}
           ItemSeparatorComponent={Divider}

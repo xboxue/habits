@@ -4,13 +4,27 @@ import { KeyboardAvoidingView, StyleSheet, TextInput } from "react-native";
 import DraggableFlatlist from "react-native-draggable-flatlist";
 import { Appbar, Button, Divider } from "react-native-paper";
 import { TodoPostItem } from "../components/TodoPostItem";
-import { useCreatePostMutation } from "../graphql/types";
+import {
+  FeedDocument,
+  FeedQuery,
+  useCreatePostMutation
+} from "../graphql/types";
 import { Todo } from "../models/Todo";
 import { RootStoreContext } from "../stores/RootStore";
 
 export const NewPostModal = observer(({ navigation }) => {
   const { todoStore } = useContext(RootStoreContext);
-  const [createPost] = useCreatePostMutation();
+  const [createPost] = useCreatePostMutation({
+    update: (cache, { data: { createPost } }) => {
+      const { feed }: FeedQuery = cache.readQuery({ query: FeedDocument });
+      cache.writeQuery({
+        query: FeedDocument,
+        data: {
+          feed: feed.concat([createPost])
+        }
+      });
+    }
+  });
   const [value, setValue] = useState("");
 
   return (
