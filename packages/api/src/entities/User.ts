@@ -22,9 +22,9 @@ export class User extends BaseEntity {
   @Column()
   displayName: string;
 
-  @Field()
-  @Column()
-  email: string;
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  email?: string;
 
   @Field()
   @Column()

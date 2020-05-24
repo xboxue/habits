@@ -9,8 +9,8 @@ export class CreateUserInput implements Partial<User> {
   @Field()
   displayName: string;
 
-  @Field()
-  email: string;
+  @Field({ nullable: true })
+  email?: string;
 
   @Field()
   emailVerified: boolean;
