@@ -26,7 +26,9 @@ export const PostCard = observer(({ post }: Props) => {
     <Card style={{ elevation: 0, marginBottom: 10 }}>
       <Card.Title
         title={post.author.displayName}
-        left={props => <Avatar.Text {...props} label="BX" />}
+        left={props => (
+          <Avatar.Image size={40} source={{ uri: post.author.photoUrl }} />
+        )}
       />
       <Card.Content>
         <Paragraph>{post.content}</Paragraph>

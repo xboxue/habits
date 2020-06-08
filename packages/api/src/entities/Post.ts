@@ -27,7 +27,7 @@ export class Post extends BaseEntity {
   author: User;
 
   @Field(type => [PostTodo])
-  @OneToMany(type => PostTodo, todo => todo.post, { cascade: true })
+  @OneToMany(type => PostTodo, todo => todo.post)
   todos: PostTodo[];
 
   @Field()

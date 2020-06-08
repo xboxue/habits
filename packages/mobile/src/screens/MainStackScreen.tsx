@@ -3,6 +3,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import { BottomTabsScreen } from "./BottomTabsScreen";
 import { NewPostModal } from "./NewPostModal";
+import { ProfileScreen } from "./ProfileScreen";
 import { SearchUsersModal } from "./SearchUsersModal";
 import { SelectTodoModal } from "./SelectTodoModal";
 
@@ -20,5 +21,6 @@ export const MainStackScreen = observer(() => (
     <MainStack.Screen name="NewPostModal" component={NewPostModal} />
     <MainStack.Screen name="SelectTodoModal" component={SelectTodoModal} />
     <MainStack.Screen name="SearchUsersModal" component={SearchUsersModal} />
+    <MainStack.Screen name="Profile" component={ProfileScreen} />
   </MainStack.Navigator>
 ));

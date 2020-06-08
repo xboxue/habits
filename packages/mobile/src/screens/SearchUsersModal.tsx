@@ -38,6 +38,11 @@ export const SearchUsersModal = props => {
             renderItem={({ item }) => (
               <List.Item
                 title={item.displayName}
+                onPress={() =>
+                  props.navigation.navigate("Profile", {
+                    ...item
+                  })
+                }
                 left={() => (
                   <List.Icon
                     icon={() => (
