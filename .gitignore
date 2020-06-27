@@ -10,11 +10,12 @@ yarn-error.log
 *.orig.*
 web-build/
 web-report/
-ormconfig.json
+ormconfig.js
 packages/mobile/src/graphql/types.ts
 __generated__
 .env
 serviceAccountKey.json
+dist
 
 # macOS
 .DS_Store
