@@ -16,6 +16,7 @@ export const userQuery = gql`
       }
       followerCount
       followingCount
+      isFollowing
     }
   }
 `;

@@ -35,6 +35,34 @@ export class UserResolver {
   }
 
   @Mutation(returns => User)
+  async followUser(
+    @Arg("id") id: string,
+    @Ctx() { user }: Context
+  ): Promise<User> {
+    const followee = await this.userRepository.findOne(id, {
+      relations: ["followers"]
+    });
+    followee.followers.push(user);
+
+    return followee.save();
+  }
+
+  @Mutation(returns => User)
+  async unfollowUser(
+    @Arg("id") id: string,
+    @Ctx() { user }: Context
+  ): Promise<User> {
+    const followee = await this.userRepository.findOne(id, {
+      relations: ["followers"]
+    });
+    followee.followers = followee.followers.filter(
+      follower => follower.uid !== user.uid
+    );
+
+    return followee.save();
+  }
+
+  @Mutation(returns => User)
   createUser(@Arg("input") input: CreateUserInput): Promise<User> {
     const user = this.userRepository.create(input);
     return this.userRepository.save(user);
@@ -55,10 +83,25 @@ export class UserResolver {
   async followingCount(@Root() { uid }: User): Promise<number> {
     const { followingCount } = await this.userRepository
       .createQueryBuilder("user")
-      .innerJoin("user.following", "follower")
+      .innerJoin("user.following", "followee")
       .where("user.uid = :uid", { uid })
       .select("COUNT(*)", "followingCount")
       .getRawOne();
     return followingCount;
+  }
+
+  @FieldResolver(returns => Boolean)
+  async isFollowing(
+    @Root() followee: User,
+    @Ctx() { user: follower }: Context
+  ): Promise<boolean> {
+    const { isFollowing } = await this.userRepository
+      .createQueryBuilder("user")
+      .innerJoin("user.followers", "follower")
+      .where("user.uid = :followeeId", { followeeId: followee.uid })
+      .andWhere("follower.uid = :followerId", { followerId: follower.uid })
+      .select("COUNT(*)", "isFollowing")
+      .getRawOne();
+    return !!+isFollowing;
   }
 }

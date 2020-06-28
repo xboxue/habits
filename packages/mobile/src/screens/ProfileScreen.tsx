@@ -3,11 +3,17 @@ import { FlatList, View } from "react-native";
 import { Appbar, Avatar, Button, Text, Title } from "react-native-paper";
 import { PostCard } from "../components/PostCard";
 import { StatusBanner } from "../components/StatusBanner";
-import { useUserQuery } from "../graphql/types";
+import {
+  useFollowUserMutation,
+  useUnfollowUserMutation,
+  useUserQuery
+} from "../graphql/types";
 
 export const ProfileScreen = props => {
   const { photoUrl, displayName, uid } = props.route.params;
   const { loading, error, data } = useUserQuery({ variables: { id: uid } });
+  const [followUser] = useFollowUserMutation();
+  const [unfollowUser] = useUnfollowUserMutation();
 
   return (
     <>
@@ -25,7 +31,15 @@ export const ProfileScreen = props => {
           </View>
           <Text>{data.user.followerCount} followers</Text>
           <Text>{data.user.followingCount} following</Text>
-          <Button>Follow</Button>
+          {data.user.isFollowing ? (
+            <Button onPress={() => unfollowUser({ variables: { id: uid } })}>
+              Unfollow
+            </Button>
+          ) : (
+            <Button onPress={() => followUser({ variables: { id: uid } })}>
+              Follow
+            </Button>
+          )}
           <FlatList
             data={data.user.posts}
             renderItem={({ item }) => (
