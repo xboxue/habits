@@ -4,7 +4,7 @@ import { User } from "../../entities/User";
 @InputType()
 export class CreateUserInput implements Partial<User> {
   @Field(type => ID)
-  uid: string;
+  id: string;
 
   @Field()
   displayName: string;

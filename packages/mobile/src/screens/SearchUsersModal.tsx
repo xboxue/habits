@@ -52,7 +52,7 @@ export const SearchUsersModal = props => {
                 )}
               />
             )}
-            keyExtractor={item => item.uid}
+            keyExtractor={item => item.id}
             ItemSeparatorComponent={Divider}
           />
         )

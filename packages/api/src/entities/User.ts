@@ -16,7 +16,7 @@ import { Todo } from "./Todo";
 export class User extends BaseEntity {
   @Field(type => ID)
   @PrimaryColumn()
-  uid: string;
+  id: string;
 
   @Field()
   @Column()

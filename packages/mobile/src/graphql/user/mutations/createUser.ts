@@ -3,7 +3,7 @@ import { gql } from "apollo-boost";
 export const createUserMutation = gql`
   mutation CreateUser($input: CreateUserInput!) {
     createUser(input: $input) {
-      uid
+      id
       displayName
       email
       emailVerified

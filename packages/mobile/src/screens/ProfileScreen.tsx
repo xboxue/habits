@@ -10,8 +10,8 @@ import {
 } from "../graphql/types";
 
 export const ProfileScreen = props => {
-  const { photoUrl, displayName, uid } = props.route.params;
-  const { loading, error, data } = useUserQuery({ variables: { id: uid } });
+  const { photoUrl, displayName, id } = props.route.params;
+  const { loading, error, data } = useUserQuery({ variables: { id } });
   const [followUser] = useFollowUserMutation();
   const [unfollowUser] = useUnfollowUserMutation();
 
@@ -32,11 +32,11 @@ export const ProfileScreen = props => {
           <Text>{data.user.followerCount} followers</Text>
           <Text>{data.user.followingCount} following</Text>
           {data.user.isFollowing ? (
-            <Button onPress={() => unfollowUser({ variables: { id: uid } })}>
+            <Button onPress={() => unfollowUser({ variables: { id } })}>
               Unfollow
             </Button>
           ) : (
-            <Button onPress={() => followUser({ variables: { id: uid } })}>
+            <Button onPress={() => followUser({ variables: { id } })}>
               Follow
             </Button>
           )}
@@ -44,7 +44,7 @@ export const ProfileScreen = props => {
             data={data.user.posts}
             renderItem={({ item }) => (
               <PostCard
-                post={{ ...item, author: { displayName, photoUrl, uid } }}
+                post={{ ...item, author: { displayName, photoUrl, id } }}
               />
             )}
             keyExtractor={item => item.id.toString()}

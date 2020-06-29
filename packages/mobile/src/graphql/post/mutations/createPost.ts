@@ -6,7 +6,7 @@ export const createUserMutation = gql`
       id
       content
       author {
-        uid
+        id
         displayName
         photoUrl
       }

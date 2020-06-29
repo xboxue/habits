@@ -22,7 +22,7 @@ export const SignInScreen = () => {
     createUser({
       variables: {
         input: {
-          uid: user.uid,
+          id: user.uid,
           displayName: user.displayName,
           email: user.email,
           emailVerified: user.emailVerified,

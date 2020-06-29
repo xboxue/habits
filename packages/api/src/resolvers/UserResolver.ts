@@ -30,7 +30,7 @@ export class UserResolver {
     return this.userRepository
       .createQueryBuilder("user")
       .where("user.displayName ILIKE :name", { name: `${name}%` })
-      .andWhere("user.uid <> :uid", { uid: user.uid })
+      .andWhere("user.id <> :id", { id: user.id })
       .getMany();
   }
 
@@ -56,7 +56,7 @@ export class UserResolver {
       relations: ["followers"]
     });
     followee.followers = followee.followers.filter(
-      follower => follower.uid !== user.uid
+      follower => follower.id !== user.id
     );
 
     return followee.save();
@@ -69,22 +69,22 @@ export class UserResolver {
   }
 
   @FieldResolver(returns => Int)
-  async followerCount(@Root() { uid }: User): Promise<number> {
+  async followerCount(@Root() { id }: User): Promise<number> {
     const { followerCount } = await this.userRepository
       .createQueryBuilder("user")
       .innerJoin("user.followers", "follower")
-      .where("user.uid = :uid", { uid })
+      .where("user.id = :id", { id })
       .select("COUNT(*)", "followerCount")
       .getRawOne();
     return followerCount;
   }
 
   @FieldResolver(returns => Int)
-  async followingCount(@Root() { uid }: User): Promise<number> {
+  async followingCount(@Root() { id }: User): Promise<number> {
     const { followingCount } = await this.userRepository
       .createQueryBuilder("user")
       .innerJoin("user.following", "followee")
-      .where("user.uid = :uid", { uid })
+      .where("user.id = :id", { id })
       .select("COUNT(*)", "followingCount")
       .getRawOne();
     return followingCount;
@@ -98,8 +98,8 @@ export class UserResolver {
     const { isFollowing } = await this.userRepository
       .createQueryBuilder("user")
       .innerJoin("user.followers", "follower")
-      .where("user.uid = :followeeId", { followeeId: followee.uid })
-      .andWhere("follower.uid = :followerId", { followerId: follower.uid })
+      .where("user.id = :followeeId", { followeeId: followee.id })
+      .andWhere("follower.id = :followerId", { followerId: follower.id })
       .select("COUNT(*)", "isFollowing")
       .getRawOne();
     return !!+isFollowing;

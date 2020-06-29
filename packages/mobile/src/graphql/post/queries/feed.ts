@@ -6,7 +6,7 @@ export const feedQuery = gql`
       id
       content
       author {
-        uid
+        id
         displayName
         photoUrl
       }
