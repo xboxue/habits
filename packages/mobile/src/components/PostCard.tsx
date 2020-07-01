@@ -1,3 +1,4 @@
+import { formatDistanceToNowStrict } from "date-fns";
 import { observer } from "mobx-react";
 import React, { useContext } from "react";
 import { FlatList } from "react-native";
@@ -26,6 +27,7 @@ export const PostCard = observer(({ post }: Props) => {
     <Card style={{ elevation: 0, marginBottom: 10 }}>
       <Card.Title
         title={post.author.displayName}
+        subtitle={`${formatDistanceToNowStrict(new Date(post.createdAt))} ago`}
         left={props => (
           <Avatar.Image size={40} source={{ uri: post.author.photoUrl }} />
         )}

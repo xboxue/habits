@@ -1,5 +1,5 @@
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Post } from "../entities/Post";
 import { PostTodo } from "../entities/PostTodo";
@@ -12,8 +12,9 @@ export class PostResolver {
   @InjectRepository(PostTodo) private todoRepository: Repository<PostTodo>;
 
   @Query(returns => [Post])
-  feed(): Promise<Post[]> {
+  feed(@Ctx() { user }: Context): Promise<Post[]> {
     return this.postRepository.find({
+      where: { author: In([...user.followingIds, user.id]) },
       relations: ["author", "todos"]
     });
   }

@@ -6,7 +6,8 @@ import {
   JoinTable,
   ManyToMany,
   OneToMany,
-  PrimaryColumn
+  PrimaryColumn,
+  RelationId
 } from "typeorm";
 import { Post } from "./Post";
 import { Todo } from "./Todo";
@@ -54,4 +55,7 @@ export class User extends BaseEntity {
   @Field(type => [User])
   @ManyToMany(type => User, user => user.followers)
   following: User[];
+
+  @RelationId((user: User) => user.followers)
+  followingIds: string[];
 }
