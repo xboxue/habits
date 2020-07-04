@@ -9,6 +9,7 @@ import {
   PrimaryColumn,
   RelationId
 } from "typeorm";
+import { Comment } from "./Comment";
 import { Post } from "./Post";
 import { Todo } from "./Todo";
 
@@ -42,6 +43,10 @@ export class User extends BaseEntity {
   @Field(type => [Post])
   @OneToMany(type => Post, post => post.author)
   posts: Post[];
+
+  @Field(type => [Comment])
+  @OneToMany(type => Comment, comment => comment.author)
+  comments: Comment[];
 
   @Field(type => [Todo])
   @OneToMany(type => Todo, todo => todo.author)

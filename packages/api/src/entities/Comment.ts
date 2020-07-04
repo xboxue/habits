@@ -5,16 +5,14 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn
 } from "typeorm";
-import { Comment } from "./Comment";
-import { PostTodo } from "./PostTodo";
+import { Post } from "./Post";
 import { User } from "./User";
 
 @ObjectType()
 @Entity()
-export class Post extends BaseEntity {
+export class Comment extends BaseEntity {
   @Field(type => ID)
   @PrimaryGeneratedColumn()
   id: number;
@@ -24,16 +22,12 @@ export class Post extends BaseEntity {
   content: string;
 
   @Field(type => User)
-  @ManyToOne(type => User, user => user.posts)
+  @ManyToOne(type => User, user => user.comments)
   author: User;
 
-  @Field(type => [PostTodo])
-  @OneToMany(type => PostTodo, todo => todo.post, { cascade: true })
-  todos: PostTodo[];
-
-  @Field(type => [Comment])
-  @OneToMany(type => Comment, comment => comment.post)
-  comments: Comment[];
+  @Field(type => Post)
+  @ManyToOne(type => Post, post => post.comments)
+  post: Post;
 
   @Field()
   @CreateDateColumn()
