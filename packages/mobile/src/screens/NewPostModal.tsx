@@ -20,7 +20,7 @@ export const NewPostModal = observer(({ navigation }) => {
       cache.writeQuery({
         query: FeedDocument,
         data: {
-          feed: feed.concat([createPost])
+          feed: [createPost].concat(feed)
         }
       });
     }

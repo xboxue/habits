@@ -15,6 +15,7 @@ export class PostResolver {
   feed(@Ctx() { user }: Context): Promise<Post[]> {
     return this.postRepository.find({
       where: { author: In([...user.followingIds, user.id]) },
+      order: { createdAt: "DESC" },
       relations: ["author", "todos"]
     });
   }

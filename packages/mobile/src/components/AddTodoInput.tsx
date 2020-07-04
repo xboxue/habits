@@ -9,7 +9,7 @@ export const AddTodoInput = () => {
   const [value, setValue] = useState("");
   const { colors } = useTheme();
 
-  useKeyboard(undefined, () => viewStore.setAddModal(false));
+  useKeyboard({ keyboardDidHide: () => viewStore.setAddModal(false) });
 
   const addTodo = () => {
     if (!value) return;

@@ -26,7 +26,14 @@ export const FeedScreen = observer(props => {
       ) : (
         <FlatList
           data={data.feed}
-          renderItem={({ item }) => <PostCard post={item} />}
+          renderItem={({ item }) => (
+            <PostCard
+              post={item}
+              onPress={() =>
+                props.navigation.navigate("PostModal", { post: item })
+              }
+            />
+          )}
           keyExtractor={item => item.id.toString()}
         />
       )}
