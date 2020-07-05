@@ -1,6 +1,7 @@
 import { formatDistanceToNowStrict, parseISO } from "date-fns";
+import pluralize from "pluralize";
 import React from "react";
-import { FlatList } from "react-native";
+import { FlatList, View } from "react-native";
 import {
   Avatar,
   Card,
@@ -10,7 +11,11 @@ import {
   Paragraph,
   useTheme
 } from "react-native-paper";
-import { FeedQuery } from "../graphql/types";
+import {
+  FeedQuery,
+  useLikePostMutation,
+  useUnlikePostMutation
+} from "../graphql/types";
 import { FeedPostTodoItem } from "./FeedPostTodoItem";
 
 interface Props {
@@ -21,6 +26,8 @@ interface Props {
 
 export const PostCard = ({ post, onPress, showAllTodos = false }: Props) => {
   const { colors } = useTheme();
+  const [likePost] = useLikePostMutation({ variables: { id: post.id } });
+  const [unlikePost] = useUnlikePostMutation({ variables: { id: post.id } });
 
   return (
     <Card style={{ elevation: 0, marginBottom: 10 }}>
@@ -44,6 +51,24 @@ export const PostCard = ({ post, onPress, showAllTodos = false }: Props) => {
                   <List.Subheader>+{post.todos.length - 3} more</List.Subheader>
                 </>
               )}
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between"
+                }}
+              >
+                {post.likeCount > 0 && (
+                  <List.Subheader>
+                    {post.likeCount} {pluralize("like", post.likeCount)}
+                  </List.Subheader>
+                )}
+                {post.commentCount > 0 && (
+                  <List.Subheader>
+                    {post.commentCount}{" "}
+                    {pluralize("comments", post.commentCount)}
+                  </List.Subheader>
+                )}
+              </View>
             </>
           )}
           ItemSeparatorComponent={Divider}
@@ -52,7 +77,12 @@ export const PostCard = ({ post, onPress, showAllTodos = false }: Props) => {
       </Card.Content>
       <Divider />
       <Card.Actions style={{ justifyContent: "space-around" }}>
-        <IconButton icon="thumb-up-outline" color={colors.text} size={18} />
+        <IconButton
+          onPress={() => (post.isLiked ? unlikePost() : likePost())}
+          icon="thumb-up-outline"
+          color={post.isLiked ? colors.primary : colors.text}
+          size={18}
+        />
         <IconButton
           onPress={onPress}
           icon="message-outline"

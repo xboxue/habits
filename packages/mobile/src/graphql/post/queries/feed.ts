@@ -16,6 +16,9 @@ export const feedQuery = gql`
         completed
       }
       createdAt
+      likeCount
+      commentCount
+      isLiked
     }
   }
 `;
