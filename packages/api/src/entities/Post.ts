@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn
 } from "typeorm";
 import { Comment } from "./Comment";
+import { PostLike } from "./PostLike";
 import { PostTodo } from "./PostTodo";
 import { User } from "./User";
 
@@ -34,6 +35,10 @@ export class Post extends BaseEntity {
   @Field(type => [Comment])
   @OneToMany(type => Comment, comment => comment.post)
   comments: Comment[];
+
+  @Field(type => [PostLike])
+  @OneToMany(type => PostLike, like => like.post)
+  likes: PostLike[];
 
   @Field()
   @CreateDateColumn()

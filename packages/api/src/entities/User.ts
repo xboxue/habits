@@ -11,6 +11,7 @@ import {
 } from "typeorm";
 import { Comment } from "./Comment";
 import { Post } from "./Post";
+import { PostLike } from "./PostLike";
 import { Todo } from "./Todo";
 
 @ObjectType()
@@ -47,6 +48,10 @@ export class User extends BaseEntity {
   @Field(type => [Comment])
   @OneToMany(type => Comment, comment => comment.author)
   comments: Comment[];
+
+  @Field(type => [PostLike])
+  @OneToMany(type => PostLike, like => like.user)
+  likedPosts: PostLike[];
 
   @Field(type => [Todo])
   @OneToMany(type => Todo, todo => todo.author)
