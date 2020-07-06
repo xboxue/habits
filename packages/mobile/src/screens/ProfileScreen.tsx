@@ -45,6 +45,11 @@ export const ProfileScreen = props => {
             renderItem={({ item }) => (
               <PostCard
                 post={{ ...item, author: { displayName, photoUrl, id } }}
+                onPress={() =>
+                  props.navigation.navigate("PostModal", {
+                    post: { ...item, author: { displayName, photoUrl, id } }
+                  })
+                }
               />
             )}
             keyExtractor={item => item.id.toString()}

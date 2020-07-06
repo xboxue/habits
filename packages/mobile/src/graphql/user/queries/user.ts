@@ -13,6 +13,9 @@ export const userQuery = gql`
           completed
         }
         createdAt
+        likeCount
+        commentCount
+        isLiked
       }
       followerCount
       followingCount
