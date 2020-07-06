@@ -16,6 +16,9 @@ export const createPostMutation = gql`
         completed
       }
       createdAt
+      likeCount
+      commentCount
+      isLiked
     }
   }
 `;
