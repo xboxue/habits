@@ -22,7 +22,9 @@ export class TodoStore {
   @action
   async loadTodos() {
     this.isLoading = true;
-    const todos = await TodoEntity.find();
+    const todos = await TodoEntity.createQueryBuilder("todo")
+      .where("date(todo.date) = date(:date)", { date: this.date })
+      .getMany();
     this.todos.replace(
       todos.map(todo => new Todo(todo.id, todo.title, todo.completed))
     );
@@ -31,7 +33,8 @@ export class TodoStore {
 
   @action
   async addTodo(title: string, completed = false) {
-    const todo = await TodoEntity.create({ title, completed }).save();
+    const todo = TodoEntity.create({ title, completed, date: this.date });
+    await todo.save();
     this.todos.push(new Todo(todo.id, title, completed));
   }
 

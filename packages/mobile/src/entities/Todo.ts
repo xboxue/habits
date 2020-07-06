@@ -4,7 +4,7 @@ import {
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
+  UpdateDateColumn
 } from "typeorm/browser";
 
 @Entity()
@@ -17,6 +17,9 @@ export class Todo extends BaseEntity {
 
   @Column()
   completed: boolean;
+
+  @Column()
+  date: Date;
 
   @CreateDateColumn()
   createdAt: Date;
